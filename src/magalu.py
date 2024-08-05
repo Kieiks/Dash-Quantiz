@@ -4,7 +4,24 @@ import pandas as pd
 import itertools
 from parsel import Selector
 from price_parser import Price
+import urllib.parse
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+token = os.getenv('token')
+
+def remaining_request():
+    url = f"https://api.Scrape.do/info?token={token}"
+    payload={}
+    headers = {}
+    response = requests.request("GET", url, headers=headers, data=payload)
+    data = json.loads(response.text)
+
+    if data['RemainingMonthlyRequest'] > 200:
+        return True
+    else:
+        return False
 
 def generate_url(search_text):
     return search_text.replace(' ', '+')
@@ -13,6 +30,13 @@ def get_price(price_raw):
     price_object = Price.fromstring(price_raw)
     return price_object.amount_float
 
+
+# def request_url(q,pagina):
+#     targetUrl = urllib.parse.quote(f"https://www.amazon.com.br/s?k={generate_url(q)}&page={pagina}")
+#     url = "http://api.scrape.do?token={}&url={}&geoCode=br".format(token, targetUrl)
+#     r = requests.request("GET", url)
+
+#     return r.text
 
 def make_request(q,pagina):
 
@@ -29,7 +53,7 @@ def make_request(q,pagina):
             "x-nextjs-data": "1"
         }
 
-    url = f'https://www.magazineluiza.com.br/busca/{generate_url(q)}&page={pagina}'
+    url = f'https://www.magazineluiza.com.br/busca/{generate_url(q)}/?from=submit&page={pagina}'
 
     r = requests.get(url,headers=headers)
     return r.text
@@ -56,11 +80,15 @@ def extract_data(data):
 
 def magalu(q,paginas):
 
-    results = []
+    if remaining_request():
+        results = []
+        for pagina in range(1,paginas+1):
+            # data = request_url(q,pagina)
+            data = make_request(q,pagina)
+            l = extract_data(data)
+            results = list(itertools.chain(results, l))
 
-    for pagina in range(1,paginas+1):
-        data = make_request(q,pagina)
-        l = extract_data(data)
-        results = list(itertools.chain(results, l))
+        return pd.DataFrame(results)
 
-    return pd.DataFrame(results)
+    else:
+        return pd.DataFrame()

@@ -1,23 +1,15 @@
 import requests
-import urllib.parse
 import json
 import pandas as pd
 from parsel import Selector
 from price_parser import Price
 import itertools
+import urllib.parse
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
 token = os.getenv('token')
-
-def get_price(price_raw):
-    price_object = Price.fromstring(price_raw)
-    return price_object.amount_float
-
-def generate_url(search_text):
-    return search_text.replace(' ', '+')
 
 def remaining_request():
     url = f"https://api.Scrape.do/info?token={token}"
@@ -30,6 +22,13 @@ def remaining_request():
         return True
     else:
         return False
+
+def get_price(price_raw):
+    price_object = Price.fromstring(price_raw)
+    return price_object.amount_float
+
+def generate_url(search_text):
+    return search_text.replace(' ', '+')
 
 def request_url(q,pagina):
     targetUrl = urllib.parse.quote(f"https://www.amazon.com.br/s?k={generate_url(q)}&page={pagina}")
