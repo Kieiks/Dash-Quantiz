@@ -172,6 +172,7 @@ def filters(df,clicks):
             {"label": "Marca", "value": "Marca"},
             {"label": "Seller Name", "value": "SellerName"},
         ],
+        value="ECommerce",
         placeholder="Agregação",
         label="Selecionar variável para agregação",
     )
