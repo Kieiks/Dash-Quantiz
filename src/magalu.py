@@ -9,34 +9,40 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-token = os.getenv('token')
+token = os.getenv("token")
+
 
 def remaining_request():
     url = f"https://api.Scrape.do/info?token={token}"
-    payload={}
+    payload = {}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
     data = json.loads(response.text)
 
-    if data['RemainingMonthlyRequest'] > 200:
+    if data["RemainingMonthlyRequest"] > 200:
         return True
     else:
         return False
 
+
 def generate_url(search_text):
-    return search_text.replace(' ', '+')
+    return search_text.replace(" ", "+")
+
 
 def get_price(price_raw):
     price_object = Price.fromstring(price_raw)
     return price_object.amount_float
 
 
-def request_url(q,pagina):
-    targetUrl = urllib.parse.quote(f"https://www.magazineluiza.com.br/busca/{generate_url(q)}/?from=submit&page={pagina}")
+def request_url(q, pagina):
+    targetUrl = urllib.parse.quote(
+        f"https://www.magazineluiza.com.br/busca/{generate_url(q)}/?from=submit&page={pagina}"
+    )
     url = "http://api.scrape.do?token={}&url={}&geoCode=br".format(token, targetUrl)
     r = requests.request("GET", url)
 
     return r.text
+
 
 # def make_request(q,pagina):
 
@@ -58,37 +64,37 @@ def request_url(q,pagina):
 #     r = requests.get(url,headers=headers)
 #     return r.text
 
+
 def extract_data(data):
     selector = Selector(data)
 
-    data = json.loads(selector.css('#__NEXT_DATA__::text').get())
+    data = json.loads(selector.css("#__NEXT_DATA__::text").get())
     l = []
-    for produto in data['props']['pageProps']['data']['search']['products']:
+    for produto in data["props"]["pageProps"]["data"]["search"]["products"]:
         d = {
-                'ECommerce':'Magazine Luiza',
-                'Titulo':produto['title'],
-                'Preco':get_price(produto['price']['bestPrice']),
-                'Marca':produto['brand']['label'],
-                'Quantidade':produto['available'],
-                'SellerName':produto['seller']['description'],
-                'link':f"https://www.magazineluiza.com.br/{produto['path']}",
-            }
-        
+            "ECommerce": "Magazine Luiza",
+            "Titulo": produto["title"],
+            "Preco": get_price(produto["price"]["bestPrice"]),
+            "Marca": produto["brand"]["label"],
+            "Quantidade": produto["available"],
+            "SellerName": produto["seller"]["description"],
+            "link": f"https://www.magazineluiza.com.br/{produto['path']}",
+        }
+
         l.append(d)
-    
     return l
 
-def magalu(q,paginas):
+
+def magalu(q, paginas):
 
     if remaining_request():
         results = []
-        for pagina in range(1,paginas+1):
-            data = request_url(q,pagina)
+        for pagina in range(1, paginas + 1):
+            data = request_url(q, pagina)
             # data = make_request(q,pagina)
+
             l = extract_data(data)
             results = list(itertools.chain(results, l))
-
         return pd.DataFrame(results)
-
     else:
         return pd.DataFrame()
