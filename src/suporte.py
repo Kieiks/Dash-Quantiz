@@ -5,7 +5,7 @@ from nltk.corpus import stopwords
 import plotly.graph_objects as go
 
 # Install nltk resources if not already installed
-# nltk.download('stopwords')
+nltk.download('stopwords')
 def filtro_texto(df, coluna):
     
     portuguese_stop_words = set(stopwords.words('portuguese'))
