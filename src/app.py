@@ -359,6 +359,11 @@ def fetch_data(n_clicks, q, paginas, Checklist):
 
     df = pd.concat([df_meli, df_amz, df_magalu])
 
+    df['Preco'] = pd.to_numeric(df['Preco'], errors='coerce')
+    
+    # Optionally, drop rows where 'Preco' is NaN
+    df = df.dropna(subset=['Preco'])
+
     df.fillna(0, inplace=True)
 
     df["Link_Icon"] = "🔗"

@@ -98,3 +98,4 @@ def magalu(q, paginas):
         return pd.DataFrame(results)
     else:
         return pd.DataFrame()
+    
