@@ -89,7 +89,7 @@ def price_chart(df, col_chosen):
             showarrow=False,
             bgcolor="white",
         )
-    fig.update_yaxes(showticklabels=False)
+    fig.update_yaxes(showticklabels=True,gridcolor="lightgrey",gridwidth=1,griddash='dash')
     fig.update_xaxes(tickfont=dict(size=15))
 
     fig.update_layout(
