@@ -51,3 +51,6 @@ def mercadolivre(q, paginas):
         df = get_attributes(data)
         df_final = pd.concat([df_final, df], axis=0)
     return df_final
+
+
+# print(mercadolivre("celular", 2))

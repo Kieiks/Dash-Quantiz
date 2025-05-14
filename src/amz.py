@@ -49,7 +49,6 @@ def extract_data(html):
     selector = Selector(html)
 
     produtos = selector.css('div[data-component-type="s-search-result"]')
-
     l = []
     for i, produto in enumerate(produtos):
 
@@ -63,9 +62,7 @@ def extract_data(html):
             price = "0"
         d = {
             "ECommerce": "Amazon",
-            "Titulo": produto.css(
-                ".a-size-base-plus.a-color-base.a-text-normal::text"
-            ).get(),
+            "Titulo": produto.css(".a-size-base-plus.a-spacing-none.a-color-base.a-text-normal").css('span::text').get(),
             "Preco": price,
             "asin": produto.attrib["data-asin"],
             "link": "https://www.amazon.com.br/dp/" + produto.attrib["data-asin"],
@@ -90,3 +87,5 @@ def amazon(q, paginas):
         return pd.DataFrame(results)
     else:
         return pd.DataFrame()
+
+# print(amazon("whey protein", 1))

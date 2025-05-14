@@ -6,11 +6,12 @@ from dash_ag_grid import AgGrid
 from dash_iconify import DashIconify
 import dash
 
-from meli import mercadolivre
+from meli_2025 import mercadolivre
 from magalu import magalu
 from amz import amazon
 from amz import remaining_request
 import suporte
+from mongo import append_to_mongo
 
 dash._dash_renderer._set_react_version("18.2.0")
 
@@ -365,6 +366,9 @@ def fetch_data(n_clicks, q, paginas, Checklist):
     df = df.dropna(subset=['Preco'])
 
     df.fillna(0, inplace=True)
+    df["Timestamp"] = pd.Timestamp.now()
+
+    append_to_mongo(df)
 
     df["Link_Icon"] = "🔗"
 
