@@ -13,3 +13,5 @@ nltk==3.8.1
 gunicorn
 dash-tools
 curl-cffi
+python-dotenv==1.0.1
+pymongo==4.11.1

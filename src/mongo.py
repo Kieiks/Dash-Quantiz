@@ -2,9 +2,14 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import pandas as pd
+import os
+from dotenv import load_dotenv
 
 def append_to_mongo(df):
-    uri = "mongodb+srv://kieiks:UHTZeD8BWLxkKnmb@fraldas.1gjvb.mongodb.net/?retryWrites=true&w=majority&appName=fraldas"
+    load_dotenv()
+    MONGO_USER = os.getenv("mongo_user")
+    MONGO_PASS = os.getenv("mongo_pass")
+    uri = f"mongodb+srv://{MONGO_USER}:{MONGO_PASS}@fraldas.1gjvb.mongodb.net/?retryWrites=true&w=majority&appName=fraldas"
 
     # Create a new client and connect to the server
     client = MongoClient(uri, server_api=ServerApi('1'))
