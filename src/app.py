@@ -366,7 +366,7 @@ def fetch_data(n_clicks, q, paginas, Checklist):
     df = df.dropna(subset=['Preco'])
 
     df.fillna(0, inplace=True)
-    df["Timestamp"] = pd.Timestamp.now()
+    df["Timestamp"] = pd.Timestamp.now(tz='America/Sao_Paulo')
 
     append_to_mongo(df)
 

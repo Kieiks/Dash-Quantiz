@@ -26,7 +26,7 @@ def extract_product_info(data):
                     "Titulo": extract_info(i, 'title'),
                     "Preco": extract_info(i, 'price'),
                     'Marca': extract_info(i, 'brand'),
-                    "link": 'https://www.mercadolivre.com.br/p/' + i['polycard']['metadata'].get('product_id', i['polycard']['metadata']['id']),
+                    "link": i['polycard']['metadata'].get('url') + i['polycard']['metadata'].get('url_params', ''),
                     "SellerName": (extract_info(i, 'seller') or '').replace(' {icon_cockade}', '').replace('Por ',''),
                 }
             produtos.append(produto)
